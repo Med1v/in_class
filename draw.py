@@ -50,7 +50,6 @@ cv2.namedWindow('image')
 cv2.setMouseCallback('image', draw_circle)
 
 cv2.namedWindow('colour')
-cv2.setMouseCallback('colour', get_pixel_colour)
 
 while(1):
     cv2.imshow('image', img)
