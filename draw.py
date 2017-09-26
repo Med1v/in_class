@@ -13,35 +13,49 @@ img = np.zeros(screen_size, np.uint8)
 
 
 def draw_circle(event,x,y,flags,param):
-    global draw
+    global draw, brush_colour
+    step_len = 20
     # print(x, y)
     if event == cv2.EVENT_LBUTTONDOWN:
         draw = True
         cv2.circle(img, (x,y), brush_size, brush_colour, -1)
-    if event == cv2.EVENT_LBUTTONUP:
+    elif event == cv2.EVENT_LBUTTONUP:
         draw = False
-    if event == cv2.EVENT_MOUSEMOVE:
+    elif event == cv2.EVENT_MOUSEMOVE:
         if draw:
             # blue, green, red
             cv2.circle(show_img, (x,y), brush_size, brush_colour, -1)
+    elif event == cv2.EVENT_RBUTTONDOWN:
+        cc = y/step_len*(255/(screen_size[1]/step_len))
+        brush_colour = (cc, cc, cc)
+        print("colour change")
+
 
 
 def gen_colours(img):
     arr = np.zeros((screen_size[1], 50, 3), dtype='uint8')
     step_len = 20
     print(len(arr), len(arr[0]))
-    tmp = 0
-    for y in range(len(arr)):
+    b, g, r, tmp = 0, 0, 0, 0
+    for y in range(1, len(arr)):
         if y%step_len == 0:
-            # print("tmp =", tmp)
-            tmp = round(y/step_len*(255/32))
+            tmp = y/step_len*(255/(len(arr)/step_len))
+            b = tmp; g = tmp; r = tmp;
+            # if y<len(arr)/3:
+            #     b = round(tmp)
+            #     g = 0
+            #     r = 0
+            # if y<len(arr)/3*2:
+            #     b = 0
+            #     g = round(tmp)
+            #     r = 0
+            # if y>len(arr)/3*2:
+            #     b = 0
+            #     g = 0
+            #     r = round(tmp)
         for x in range(len(arr[0])):
-            arr[y][x] = [tmp, tmp, tmp]
-            # if x%149 == 0:
-            #     print(arr[y][x])
+            arr[y][x] = [b, g, r]
     return np.append(img, arr, axis=1)
-    # return arr
-
 
 img.fill(255)
 show_img = img
